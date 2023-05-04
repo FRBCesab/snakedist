@@ -20,3 +20,8 @@ VignetteBuilder: knitr
 Suggests: 
     knitr,
     rmarkdown
+Imports: 
+    dplyr,
+    parallel,
+    rlang,
+    sf
