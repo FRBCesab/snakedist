@@ -20,7 +20,7 @@ library(ggplot2)
 
 
 ```{r 'ggplot-theme', echo=FALSE}
-## Custom ggplot2 theme ----
+# Custom ggplot2 theme ----
 custom_theme <- function() {
   theme_light() + 
   theme(plot.title   = element_text(face = "bold", family = "serif", size = 18),
@@ -53,7 +53,7 @@ adour_river
 
 ```{r 'import-adour-sites', echo=TRUE}
 # Import sites data ----
-path_to_file <- system.file("extdata", "adour_survey_sampling.csv", 
+path_to_file <- system.file("extdata", "adour_sites_coords.csv", 
                             package = "snakedist")
 adour_sites  <- read.csv(path_to_file)
 adour_sites
@@ -116,14 +116,7 @@ ggplot() +
   geom_sf(data = adour_sites, shape = 19, size = 2) +
   labs(caption = "RGF93 / Lambert-93 Projection") +
   custom_theme() +
-  geom_text(aes(x = 334500, y = 6285000), label = "River", hjust = 0,
-            color = "steelblue", fontface = "bold", size = 6, family = "serif") +
-  geom_text(aes(x = 414950, y = 6312200), label = "Location 3", hjust = -0.20,
-            color = "black", fontface = "bold", size = 6, family = "serif") +
-  geom_text(aes(x = 474655, y = 6236708), label = "Location 1", 
-            color = "black", fontface = "bold", size = 6, family = "serif") +
-  geom_text(aes(x = 467250, y = 6287620), label = "Location 2", 
-            color = "black", fontface = "bold", size = 6, family = "serif")
+  geom_sf_label(data = adour_sites, aes(label = site), nudge_x = 5000)
 ```
 
 
