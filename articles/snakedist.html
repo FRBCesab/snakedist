@@ -161,7 +161,8 @@ convert the <code>data.frame</code> <strong>adour_sites</strong> into an
 <p><br></p>
 <p>Let’s map the data.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<code class="sourceCode R"><span><span class="co"># Visualize data ----</span></span>
+<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html" class="external-link">geom_sf</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">adour_river</span>, col <span class="op">=</span> <span class="st">"steelblue"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html" class="external-link">geom_sf</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">adour_sites</span>, shape <span class="op">=</span> <span class="fl">19</span>, size <span class="op">=</span> <span class="fl">2</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html" class="external-link">geom_sf_label</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">adour_sites</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>label <span class="op">=</span> <span class="va">site</span><span class="op">)</span>, nudge_x <span class="op">=</span> <span class="fl">5000</span><span class="op">)</span> <span class="op">+</span></span>
@@ -187,7 +188,8 @@ points (argument <code>density</code>). All sampled points between the
 two sites will be selected and their cumulative euclidean distance will
 be computed.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">dists</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/distance_along.html">distance_along</a></span><span class="op">(</span><span class="va">adour_sites</span>, <span class="va">adour_river</span>, density <span class="op">=</span> <span class="fl">0.01</span>, type <span class="op">=</span> <span class="st">"regular"</span>, mc.cores <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="co"># Compute distance along the river ----</span></span>
+<span><span class="va">dists</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/distance_along.html">distance_along</a></span><span class="op">(</span><span class="va">adour_sites</span>, <span class="va">adour_river</span>, density <span class="op">=</span> <span class="fl">0.01</span>, type <span class="op">=</span> <span class="st">"regular"</span>, mc.cores <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">dists</span>, <span class="fl">12</span><span class="op">)</span></span>
 <span><span class="co">#&gt;    from   to  distance</span></span>
 <span><span class="co">#&gt; 1  S-01 S-01      0.00</span></span>
@@ -205,13 +207,26 @@ be computed.</p>
 <p>This <code>data.frame</code> can be converted to a square matrix with
 the function <code><a href="../reference/df_to_matrix.html">df_to_matrix()</a></code>.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/df_to_matrix.html">df_to_matrix</a></span><span class="op">(</span><span class="va">dists</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="co"># Convert to square matrix ----</span></span>
+<span><span class="fu"><a href="../reference/df_to_matrix.html">df_to_matrix</a></span><span class="op">(</span><span class="va">dists</span><span class="op">)</span></span>
 <span><span class="co">#&gt;           S-01      S-02     S-03      S-04      S-05</span></span>
 <span><span class="co">#&gt; S-01      0.00  27422.59 52913.17 103064.90 144881.86</span></span>
 <span><span class="co">#&gt; S-02  27422.59      0.00 25490.58  75642.30 117459.27</span></span>
 <span><span class="co">#&gt; S-03  52913.17  25490.58     0.00  50151.72  91968.69</span></span>
 <span><span class="co">#&gt; S-04 103064.90  75642.30 50151.72      0.00  41816.97</span></span>
 <span><span class="co">#&gt; S-05 144881.86 117459.27 91968.69  41816.97      0.00</span></span></code></pre></div>
+<p><br></p>
+<p>We can compare these values with the Euclidean distance.</p>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Compare to Euclidean distance ----</span></span>
+<span><span class="va">coords</span> <span class="op">&lt;-</span> <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_coordinates.html" class="external-link">st_coordinates</a></span><span class="op">(</span><span class="va">adour_sites</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/stats/dist.html" class="external-link">dist</a></span><span class="op">(</span><span class="va">coords</span>, upper <span class="op">=</span> <span class="cn">TRUE</span>, diag <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="co">#&gt;           1         2         3         4         5</span></span>
+<span><span class="co">#&gt; 1      0.00  23919.63  47774.67  76743.68 101265.81</span></span>
+<span><span class="co">#&gt; 2  23919.63      0.00  24125.69  52963.81  78653.68</span></span>
+<span><span class="co">#&gt; 3  47774.67  24125.69      0.00  31308.31  60142.11</span></span>
+<span><span class="co">#&gt; 4  76743.68  52963.81  31308.31      0.00  30259.12</span></span>
+<span><span class="co">#&gt; 5 101265.81  78653.68  60142.11  30259.12      0.00</span></span></code></pre></div>
 <p><br></p>
 <p>This package is related to the package <a href="https://frbcesab.github.io/chessboard/" class="external-link"><code>chessboard</code></a>.</p>
 </div>
