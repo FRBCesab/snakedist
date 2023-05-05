@@ -14,6 +14,99 @@ knitr::opts_chunk$set(collapse = TRUE,
 
 
 ```{r setup}
-library(snakedist)
+library("snakedist")
+library("ggplot2")
 ```
+
+
+```{r 'ggplot-theme', echo=FALSE}
+## Custom ggplot2 theme ----
+custom_theme <- function() {
+  theme_light() + 
+  theme(plot.title   = element_text(face = "bold", family = "serif", size = 18),
+        plot.caption = element_text(face = "italic", family = "serif"),
+        axis.title   = element_blank(),
+        axis.text    = element_text(family = "serif"))
+}
+```
+
+## Datasets
+
+`snakedist` provides two datasets:
+
+- `adour_lambert93.gpkg`: a spatial layer (`LINESTRING`) of the French river _L'Adour_.
+- `adour_sites_coords.csv`: a `data.frame` containing spatial coordinates of 10 locations sampled along the Adour.
+
+The purpose of the package `snakedist` is to compute the distance between each pair of locations by following the shape of the river.
+
+First, let's import the two datasets:
+
+
+```{r 'import-adour-river', echo=TRUE}
+# Import the spatial layer of Adour river ----
+path_to_file <- system.file("extdata", "adour_lambert93.gpkg", 
+                            package = "snakedist")
+adour_river  <- sf::st_read(path_to_file, quiet = TRUE)
+adour_river
+```
+
+
+```{r 'import-adour-sites', echo=TRUE}
+# Import sites data ----
+path_to_file <- system.file("extdata", "adour_survey_sampling.csv", 
+                            package = "snakedist")
+adour_sites  <- read.csv(path_to_file)
+adour_sites
+```
+
+
+The function `distance_along()` requires that both layers are spatial objects. So we need to convert the `data.frame` "adour_sites" into an `sf` object.
+
+```{r 'import-adour-sites', echo=TRUE}
+# Convert data.frame to sf object ----
+adour_sites <- sf::st_as_sf(adour_sites, coords = c("longitude", "latitude"), 
+                            crs = "epsg:2154")
+adour_sites
+```
+
+
+Now, we will import a base map of France to visualize our data.
+
+```{r 'get-basemap', echo=TRUE}
+# Import France departments ----
+france <- rnaturalearth::ne_states("france", returnclass = "sf")
+
+# Remove overseas territories ----
+france <- france[grep("^FR\\.", france$"code_hasc"), ]
+
+# Project layer to RGF93 / Lambert-93 system ----
+france <- sf::st_transform(france, sf::st_crs(adour_river))
+```
+
+
+Let's map the data.
+
+```{r 'map-adour-river', echo=TRUE, fig.height=9, fig.width=10, out.width='80%', fig.cap='Figure 1. Location of the French river L\'Adour'}
+# Get extent of Adour river ----
+adour_extent <- sf::st_bbox(adour_river)
+
+# Add some margin around ----
+adour_extent <- adour_extent + c(-10000, -10000, 10000, 10000)
+
+# Map ----
+ggplot() +
+  geom_sf(data = france, fill = "lightgray", col = "white", size = 0.2) +
+  geom_sf(data = adour_river, col = "steelblue") +
+  geom_sf(data = sf::st_as_sfc(adour_extent), fill = NA, size = 0.3) +
+  labs(caption = "RGF93 / Lambert-93 Projection") +
+  custom_theme() +
+  geom_text(aes(x = 194015, y = 6453703), label = "Atlantic\nOcean",
+            color = "lightgray", fontface = "italic", size = 6, 
+            family = "serif") +
+  geom_text(aes(x = 482630, y = 6150836), label = "Pyrenees",
+            color = "lightgray", fontface = "italic", size = 6, 
+            family = "serif")
+```
+
+
 
