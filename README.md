@@ -1,3 +1,4 @@
+
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
 # snakedist <img src="man/figures/package-sticker.png" align="right" style="float:right; height:120px;"/>
@@ -9,37 +10,51 @@ Check](https://github.com/frbcesab/snakedist/actions/workflows/R-CMD-check.yaml/
 [![Website](https://github.com/frbcesab/snakedist/actions/workflows/pkgdown.yaml/badge.svg)](https://github.com/frbcesab/snakedist/actions/workflows/pkgdown.yaml)
 [![CRAN
 status](https://www.r-pkg.org/badges/version/snakedist)](https://CRAN.R-project.org/package=snakedist)
-[![License: GPL (&gt;=
+[![License: GPL (\>=
 2)](https://img.shields.io/badge/License-GPL%20%28%3E%3D%202%29-blue.svg)](https://choosealicense.com/licenses/gpl-2.0/)
-[![Dependencies](https://img.shields.io/badge/dependencies-0/0-brightgreen?style=flat)](#)
 <!-- badges: end -->
 
-The goal of the R package `snakedist` is to **{{ PLEASE ADD A FEW LINES
-}}**
+The goal of the R package `snakedist` is to compute distance between
+pair of points (survey locations) along a linear shape (e.g. a river, a
+road, etc.). Note that this package works even if the points are not
+exactly on the line.
+
+![](man/figures/map-readme.png)
+
+This package has been developed for the
+[FRB-CESAB](https://www.fondationbiodiversite.fr/en/about-the-foundation/le-cesab/)
+project
+[Bridge](https://www.fondationbiodiversite.fr/en/the-frb-in-action/programs-and-projects/le-cesab/bridge/)
+and it’s related to the R package
+[`chessboard`](https://github.com/FRBCesab/chessboard).
 
 ## Installation
 
-You can install the development version from
-[GitHub](https://github.com/) with:
+You can install the development version from GitHub with:
 
-    # install.packages("remotes")
-    remotes::install_github("frbcesab/snakedist")
+``` r
+# install.packages("remotes")
+remotes::install_github("frbcesab/snakedist")
+```
 
 Then you can attach the package `snakedist`:
 
-    library("snakedist")
+``` r
+library("snakedist")
+```
 
 ## Overview
 
-Here is an overview of `snakedist` content: **{{ PLEASE ADD A FEW LINES
-}}**
+Please read the [Get
+started](https://frbcesab.github.io/snakedist/articles/snakedist.html)
+vignette.
 
 ## Citation
 
 Please cite this package as:
 
-> Casajus Nicolas (2023) snakedist: An R package to **{{ TITLE }}**. R
-> package version 0.0.0.9000.
+> Casajus Nicolas (2023) snakedist: An R package to compute distances
+> along a linear shape. R package version 1.0.
 
 ## Code of Conduct
 

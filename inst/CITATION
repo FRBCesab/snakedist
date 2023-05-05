@@ -2,9 +2,9 @@ citHeader("To cite snakedist in publications use:")
 
 bibentry(
   bibtype = "Manual",
-  title   = "snakedist: {An} {R} package to ...",
+  title   = "snakedist: {An} {R} package to compute distances along a linear shape",
   author  = c(person("Casajus Nicolas")),
   year    = "2023",
-  note    = "R package version 0.0.0.9000",
+  note    = "R package version 1.0",
   url     = "https://github.com/frbcesab/snakedist"
 )
