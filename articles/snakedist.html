@@ -106,7 +106,7 @@ curved line (e.g. a river).</p>
 (<code>geopackage</code>) of the French river <em>L’Adour</em>.</li>
 <li>
 <code>adour_sites_coords</code>: a table (<code>csv</code>)
-containing spatial coordinates of 10 locations sampled along the
+containing spatial coordinates of 5 locations sampled along the
 Adour.</li>
 </ul>
 <p><br></p>
@@ -131,17 +131,12 @@ Adour.</li>
 <span>                            package <span class="op">=</span> <span class="st">"snakedist"</span><span class="op">)</span></span>
 <span><span class="va">adour_sites</span>  <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.csv</a></span><span class="op">(</span><span class="va">path_to_file</span><span class="op">)</span></span>
 <span><span class="va">adour_sites</span></span>
-<span><span class="co">#&gt;    site longitude latitude</span></span>
-<span><span class="co">#&gt; 1  S-01  470911.2  6219515</span></span>
-<span><span class="co">#&gt; 2  S-02  466841.1  6231099</span></span>
-<span><span class="co">#&gt; 3  S-03  464962.6  6242684</span></span>
-<span><span class="co">#&gt; 4  S-04  466215.0  6252389</span></span>
-<span><span class="co">#&gt; 5  S-05  464023.4  6266791</span></span>
-<span><span class="co">#&gt; 6  S-06  458701.0  6284011</span></span>
-<span><span class="co">#&gt; 7  S-07  445238.4  6291838</span></span>
-<span><span class="co">#&gt; 8  S-08  434593.6  6302169</span></span>
-<span><span class="co">#&gt; 9  S-09  418626.3  6306239</span></span>
-<span><span class="co">#&gt; 10 S-10  379177.9  6304048</span></span></code></pre></div>
+<span><span class="co">#&gt;   site longitude latitude</span></span>
+<span><span class="co">#&gt; 1 S-01  470911.2  6219515</span></span>
+<span><span class="co">#&gt; 2 S-02  464962.6  6242684</span></span>
+<span><span class="co">#&gt; 3 S-03  464023.4  6266791</span></span>
+<span><span class="co">#&gt; 4 S-04  445238.4  6291838</span></span>
+<span><span class="co">#&gt; 5 S-05  418626.3  6306239</span></span></code></pre></div>
 <p><br></p>
 <p>The function <code><a href="../reference/distance_along.html">distance_along()</a></code> (main function of the
 package) requires that both layers are spatial objects. So we need to
@@ -152,22 +147,17 @@ convert the <code>data.frame</code> <strong>adour_sites</strong> into an
 <span><span class="va">adour_sites</span> <span class="op">&lt;-</span> <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_as_sf.html" class="external-link">st_as_sf</a></span><span class="op">(</span><span class="va">adour_sites</span>, coords <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"longitude"</span>, <span class="st">"latitude"</span><span class="op">)</span>, </span>
 <span>                            crs <span class="op">=</span> <span class="st">"epsg:2154"</span><span class="op">)</span></span>
 <span><span class="va">adour_sites</span></span>
-<span><span class="co">#&gt; Simple feature collection with 10 features and 1 field</span></span>
+<span><span class="co">#&gt; Simple feature collection with 5 features and 1 field</span></span>
 <span><span class="co">#&gt; Geometry type: POINT</span></span>
 <span><span class="co">#&gt; Dimension:     XY</span></span>
-<span><span class="co">#&gt; Bounding box:  xmin: 379177.9 ymin: 6219515 xmax: 470911.2 ymax: 6306239</span></span>
+<span><span class="co">#&gt; Bounding box:  xmin: 418626.3 ymin: 6219515 xmax: 470911.2 ymax: 6306239</span></span>
 <span><span class="co">#&gt; Projected CRS: RGF93 v1 / Lambert-93</span></span>
-<span><span class="co">#&gt;    site                 geometry</span></span>
-<span><span class="co">#&gt; 1  S-01 POINT (470911.2 6219515)</span></span>
-<span><span class="co">#&gt; 2  S-02 POINT (466841.1 6231099)</span></span>
-<span><span class="co">#&gt; 3  S-03 POINT (464962.6 6242684)</span></span>
-<span><span class="co">#&gt; 4  S-04   POINT (466215 6252389)</span></span>
-<span><span class="co">#&gt; 5  S-05 POINT (464023.4 6266791)</span></span>
-<span><span class="co">#&gt; 6  S-06   POINT (458701 6284011)</span></span>
-<span><span class="co">#&gt; 7  S-07 POINT (445238.4 6291838)</span></span>
-<span><span class="co">#&gt; 8  S-08 POINT (434593.6 6302169)</span></span>
-<span><span class="co">#&gt; 9  S-09 POINT (418626.3 6306239)</span></span>
-<span><span class="co">#&gt; 10 S-10 POINT (379177.9 6304048)</span></span></code></pre></div>
+<span><span class="co">#&gt;   site                 geometry</span></span>
+<span><span class="co">#&gt; 1 S-01 POINT (470911.2 6219515)</span></span>
+<span><span class="co">#&gt; 2 S-02 POINT (464962.6 6242684)</span></span>
+<span><span class="co">#&gt; 3 S-03 POINT (464023.4 6266791)</span></span>
+<span><span class="co">#&gt; 4 S-04 POINT (445238.4 6291838)</span></span>
+<span><span class="co">#&gt; 5 S-05 POINT (418626.3 6306239)</span></span></code></pre></div>
 <p><br></p>
 <p>Let’s map the data.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
@@ -201,43 +191,27 @@ be computed.</p>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">dists</span>, <span class="fl">12</span><span class="op">)</span></span>
 <span><span class="co">#&gt;    from   to  distance</span></span>
 <span><span class="co">#&gt; 1  S-01 S-01      0.00</span></span>
-<span><span class="co">#&gt; 2  S-01 S-02  13183.86</span></span>
-<span><span class="co">#&gt; 3  S-01 S-03  27422.59</span></span>
-<span><span class="co">#&gt; 4  S-01 S-04  37602.51</span></span>
-<span><span class="co">#&gt; 5  S-01 S-05  52913.17</span></span>
-<span><span class="co">#&gt; 6  S-01 S-06  80792.50</span></span>
-<span><span class="co">#&gt; 7  S-01 S-07 103064.90</span></span>
-<span><span class="co">#&gt; 8  S-01 S-08 125741.80</span></span>
-<span><span class="co">#&gt; 9  S-01 S-09 144881.86</span></span>
-<span><span class="co">#&gt; 10 S-01 S-10 211261.29</span></span>
-<span><span class="co">#&gt; 11 S-02 S-01  13183.86</span></span>
-<span><span class="co">#&gt; 12 S-02 S-02      0.00</span></span></code></pre></div>
+<span><span class="co">#&gt; 2  S-01 S-02  27422.59</span></span>
+<span><span class="co">#&gt; 3  S-01 S-03  52913.17</span></span>
+<span><span class="co">#&gt; 4  S-01 S-04 103064.90</span></span>
+<span><span class="co">#&gt; 5  S-01 S-05 144881.86</span></span>
+<span><span class="co">#&gt; 6  S-02 S-01  27422.59</span></span>
+<span><span class="co">#&gt; 7  S-02 S-02      0.00</span></span>
+<span><span class="co">#&gt; 8  S-02 S-03  25490.58</span></span>
+<span><span class="co">#&gt; 9  S-02 S-04  75642.30</span></span>
+<span><span class="co">#&gt; 10 S-02 S-05 117459.27</span></span>
+<span><span class="co">#&gt; 11 S-03 S-01  52913.17</span></span>
+<span><span class="co">#&gt; 12 S-03 S-02  25490.58</span></span></code></pre></div>
 <p>This <code>data.frame</code> can be converted to a square matrix with
 the function <code><a href="../reference/df_to_matrix.html">df_to_matrix()</a></code>.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/df_to_matrix.html">df_to_matrix</a></span><span class="op">(</span><span class="va">dists</span><span class="op">)</span></span>
-<span><span class="co">#&gt;           S-01      S-02      S-03      S-04      S-05      S-06      S-07</span></span>
-<span><span class="co">#&gt; S-01      0.00  13183.86  27422.59  37602.51  52913.17  80792.50 103064.90</span></span>
-<span><span class="co">#&gt; S-02  13183.86      0.00  14238.73  24418.65  39729.31  67608.64  89881.04</span></span>
-<span><span class="co">#&gt; S-03  27422.59  14238.73      0.00  10179.92  25490.58  53369.91  75642.30</span></span>
-<span><span class="co">#&gt; S-04  37602.51  24418.65  10179.92      0.00  15310.66  43189.99  65462.39</span></span>
-<span><span class="co">#&gt; S-05  52913.17  39729.31  25490.58  15310.66      0.00  27879.33  50151.72</span></span>
-<span><span class="co">#&gt; S-06  80792.50  67608.64  53369.91  43189.99  27879.33      0.00  22272.40</span></span>
-<span><span class="co">#&gt; S-07 103064.90  89881.04  75642.30  65462.39  50151.72  22272.40      0.00</span></span>
-<span><span class="co">#&gt; S-08 125741.80 112557.94  98319.20  88139.29  72828.62  44949.30  22676.90</span></span>
-<span><span class="co">#&gt; S-09 144881.86 131698.00 117459.27 107279.35  91968.69  64089.36  41816.97</span></span>
-<span><span class="co">#&gt; S-10 211261.29 198077.43 183838.70 173658.78 158348.12 130468.79 108196.39</span></span>
-<span><span class="co">#&gt;           S-08      S-09      S-10</span></span>
-<span><span class="co">#&gt; S-01 125741.80 144881.86 211261.29</span></span>
-<span><span class="co">#&gt; S-02 112557.94 131698.00 198077.43</span></span>
-<span><span class="co">#&gt; S-03  98319.20 117459.27 183838.70</span></span>
-<span><span class="co">#&gt; S-04  88139.29 107279.35 173658.78</span></span>
-<span><span class="co">#&gt; S-05  72828.62  91968.69 158348.12</span></span>
-<span><span class="co">#&gt; S-06  44949.30  64089.36 130468.79</span></span>
-<span><span class="co">#&gt; S-07  22676.90  41816.97 108196.39</span></span>
-<span><span class="co">#&gt; S-08      0.00  19140.07  85519.49</span></span>
-<span><span class="co">#&gt; S-09  19140.07      0.00  66379.43</span></span>
-<span><span class="co">#&gt; S-10  85519.49  66379.43      0.00</span></span></code></pre></div>
+<span><span class="co">#&gt;           S-01      S-02     S-03      S-04      S-05</span></span>
+<span><span class="co">#&gt; S-01      0.00  27422.59 52913.17 103064.90 144881.86</span></span>
+<span><span class="co">#&gt; S-02  27422.59      0.00 25490.58  75642.30 117459.27</span></span>
+<span><span class="co">#&gt; S-03  52913.17  25490.58     0.00  50151.72  91968.69</span></span>
+<span><span class="co">#&gt; S-04 103064.90  75642.30 50151.72      0.00  41816.97</span></span>
+<span><span class="co">#&gt; S-05 144881.86 117459.27 91968.69  41816.97      0.00</span></span></code></pre></div>
 <p><br></p>
 <p>This package is related to the package <a href="https://frbcesab.github.io/chessboard/" class="external-link"><code>chessboard</code></a>.</p>
 </div>
