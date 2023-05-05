@@ -14,8 +14,8 @@ knitr::opts_chunk$set(collapse = TRUE,
 
 
 ```{r setup}
-library("snakedist")
-library("ggplot2")
+library(snakedist)
+library(ggplot2)
 ```
 
 
