@@ -77,12 +77,135 @@
     
     
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/frbcesab/snakedist" class="external-link">snakedist</a></span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/frbcesab/snakedist" class="external-link">snakedist</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span></code></pre></div>
+<div class="section level2">
+<h2 id="datasets">Datasets<a class="anchor" aria-label="anchor" href="#datasets"></a>
+</h2>
+<p><code>snakedist</code> provides two datasets:</p>
+<ul>
+<li>
+<code>adour_lambert93.gpkg</code>: a spatial layer
+(<code>LINESTRING</code>) of the French river <em>L’Adour</em>.</li>
+<li>
+<code>adour_sites_coords.csv</code>: a <code>data.frame</code>
+containing spatial coordinates of 10 locations sampled along the
+Adour.</li>
+</ul>
+<p>The purpose of the package <code>snakedist</code> is to compute the
+distance between each pair of locations by following the shape of the
+river.</p>
+<p>First, let’s import the two datasets:</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Import the spatial layer of Adour river ----</span></span>
+<span><span class="va">path_to_file</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"adour_lambert93.gpkg"</span>, </span>
+<span>                            package <span class="op">=</span> <span class="st">"snakedist"</span><span class="op">)</span></span>
+<span><span class="va">adour_river</span>  <span class="op">&lt;-</span> <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_read.html" class="external-link">st_read</a></span><span class="op">(</span><span class="va">path_to_file</span>, quiet <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="va">adour_river</span></span>
+<span><span class="co">#&gt; Simple feature collection with 1 feature and 1 field</span></span>
+<span><span class="co">#&gt; Geometry type: LINESTRING</span></span>
+<span><span class="co">#&gt; Dimension:     XY</span></span>
+<span><span class="co">#&gt; Bounding box:  xmin: 334324.8 ymin: 6207072 xmax: 480886.8 ymax: 6308530</span></span>
+<span><span class="co">#&gt; Projected CRS: RGF93 v1 / Lambert-93</span></span>
+<span><span class="co">#&gt;   river_name                           geom</span></span>
+<span><span class="co">#&gt; 1    L'Adour LINESTRING (480886.8 620722...</span></span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Import sites data ----</span></span>
+<span><span class="va">path_to_file</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"adour_sites_coords.csv"</span>, </span>
+<span>                            package <span class="op">=</span> <span class="st">"snakedist"</span><span class="op">)</span></span>
+<span><span class="va">adour_sites</span>  <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.csv</a></span><span class="op">(</span><span class="va">path_to_file</span><span class="op">)</span></span>
+<span><span class="va">adour_sites</span></span>
+<span><span class="co">#&gt;    site longitude latitude</span></span>
+<span><span class="co">#&gt; 1  S-01  470911.2  6219515</span></span>
+<span><span class="co">#&gt; 2  S-02  466841.1  6231099</span></span>
+<span><span class="co">#&gt; 3  S-03  464962.6  6242684</span></span>
+<span><span class="co">#&gt; 4  S-04  466215.0  6252389</span></span>
+<span><span class="co">#&gt; 5  S-05  464023.4  6266791</span></span>
+<span><span class="co">#&gt; 6  S-06  458701.0  6284011</span></span>
+<span><span class="co">#&gt; 7  S-07  445238.4  6291838</span></span>
+<span><span class="co">#&gt; 8  S-08  434593.6  6302169</span></span>
+<span><span class="co">#&gt; 9  S-09  418626.3  6306239</span></span>
+<span><span class="co">#&gt; 10 S-10  379177.9  6304048</span></span></code></pre></div>
+<p>The function <code><a href="../reference/distance_along.html">distance_along()</a></code> requires that both layers
+are spatial objects. So we need to convert the <code>data.frame</code>
+“adour_sites” into an <code>sf</code> object.</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Convert data.frame to sf object ----</span></span>
+<span><span class="va">adour_sites</span> <span class="op">&lt;-</span> <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_as_sf.html" class="external-link">st_as_sf</a></span><span class="op">(</span><span class="va">adour_sites</span>, coords <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"longitude"</span>, <span class="st">"latitude"</span><span class="op">)</span>, </span>
+<span>                            crs <span class="op">=</span> <span class="st">"epsg:2154"</span><span class="op">)</span></span>
+<span><span class="va">adour_sites</span></span>
+<span><span class="co">#&gt; Simple feature collection with 10 features and 1 field</span></span>
+<span><span class="co">#&gt; Geometry type: POINT</span></span>
+<span><span class="co">#&gt; Dimension:     XY</span></span>
+<span><span class="co">#&gt; Bounding box:  xmin: 379177.9 ymin: 6219515 xmax: 470911.2 ymax: 6306239</span></span>
+<span><span class="co">#&gt; Projected CRS: RGF93 v1 / Lambert-93</span></span>
+<span><span class="co">#&gt;    site                 geometry</span></span>
+<span><span class="co">#&gt; 1  S-01 POINT (470911.2 6219515)</span></span>
+<span><span class="co">#&gt; 2  S-02 POINT (466841.1 6231099)</span></span>
+<span><span class="co">#&gt; 3  S-03 POINT (464962.6 6242684)</span></span>
+<span><span class="co">#&gt; 4  S-04   POINT (466215 6252389)</span></span>
+<span><span class="co">#&gt; 5  S-05 POINT (464023.4 6266791)</span></span>
+<span><span class="co">#&gt; 6  S-06   POINT (458701 6284011)</span></span>
+<span><span class="co">#&gt; 7  S-07 POINT (445238.4 6291838)</span></span>
+<span><span class="co">#&gt; 8  S-08 POINT (434593.6 6302169)</span></span>
+<span><span class="co">#&gt; 9  S-09 POINT (418626.3 6306239)</span></span>
+<span><span class="co">#&gt; 10 S-10 POINT (379177.9 6304048)</span></span></code></pre></div>
+<p>Now, we will import a base map of France to visualize our data.</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Import France departments ----</span></span>
+<span><span class="va">france</span> <span class="op">&lt;-</span> <span class="fu">rnaturalearth</span><span class="fu">::</span><span class="fu"><a href="https://docs.ropensci.org/rnaturalearth/reference/ne_states.html" class="external-link">ne_states</a></span><span class="op">(</span><span class="st">"france"</span>, returnclass <span class="op">=</span> <span class="st">"sf"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Remove overseas territories ----</span></span>
+<span><span class="va">france</span> <span class="op">&lt;-</span> <span class="va">france</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">grep</a></span><span class="op">(</span><span class="st">"^FR\\."</span>, <span class="va">france</span><span class="op">$</span><span class="st">"code_hasc"</span><span class="op">)</span>, <span class="op">]</span></span>
+<span></span>
+<span><span class="co"># Project layer to RGF93 / Lambert-93 system ----</span></span>
+<span><span class="va">france</span> <span class="op">&lt;-</span> <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_transform.html" class="external-link">st_transform</a></span><span class="op">(</span><span class="va">france</span>, <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_crs.html" class="external-link">st_crs</a></span><span class="op">(</span><span class="va">adour_river</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<p>Let’s map the data.</p>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Get extent of Adour river ----</span></span>
+<span><span class="va">adour_extent</span> <span class="op">&lt;-</span> <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_bbox.html" class="external-link">st_bbox</a></span><span class="op">(</span><span class="va">adour_river</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Add some margin around ----</span></span>
+<span><span class="va">adour_extent</span> <span class="op">&lt;-</span> <span class="va">adour_extent</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">10000</span>, <span class="op">-</span><span class="fl">10000</span>, <span class="fl">10000</span>, <span class="fl">10000</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Map ----</span></span>
+<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html" class="external-link">geom_sf</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">france</span>, fill <span class="op">=</span> <span class="st">"lightgray"</span>, col <span class="op">=</span> <span class="st">"white"</span>, size <span class="op">=</span> <span class="fl">0.2</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html" class="external-link">geom_sf</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">adour_river</span>, col <span class="op">=</span> <span class="st">"steelblue"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html" class="external-link">geom_sf</a></span><span class="op">(</span>data <span class="op">=</span> <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_as_sfc.html" class="external-link">st_as_sfc</a></span><span class="op">(</span><span class="va">adour_extent</span><span class="op">)</span>, fill <span class="op">=</span> <span class="cn">NA</span>, size <span class="op">=</span> <span class="fl">0.3</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>caption <span class="op">=</span> <span class="st">"RGF93 / Lambert-93 Projection"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">custom_theme</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_text.html" class="external-link">geom_text</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fl">194015</span>, y <span class="op">=</span> <span class="fl">6453703</span><span class="op">)</span>, label <span class="op">=</span> <span class="st">"Atlantic\nOcean"</span>,</span>
+<span>            color <span class="op">=</span> <span class="st">"lightgray"</span>, fontface <span class="op">=</span> <span class="st">"italic"</span>, size <span class="op">=</span> <span class="fl">6</span>, </span>
+<span>            family <span class="op">=</span> <span class="st">"serif"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_text.html" class="external-link">geom_text</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fl">482630</span>, y <span class="op">=</span> <span class="fl">6150836</span><span class="op">)</span>, label <span class="op">=</span> <span class="st">"Pyrenees"</span>,</span>
+<span>            color <span class="op">=</span> <span class="st">"lightgray"</span>, fontface <span class="op">=</span> <span class="st">"italic"</span>, size <span class="op">=</span> <span class="fl">6</span>, </span>
+<span>            family <span class="op">=</span> <span class="st">"serif"</span><span class="op">)</span></span></code></pre></div>
+<div class="figure">
+<img src="snakedist_files/figure-html/map-adour-river-1.png" alt="Figure 1. Location of the French river L'Adour" width="80%"><p class="caption">
+Figure 1. Location of the French river L’Adour
+</p>
+</div>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html" class="external-link">geom_sf</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">adour_river</span>, col <span class="op">=</span> <span class="st">"steelblue"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html" class="external-link">geom_sf</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">adour_sites</span>, shape <span class="op">=</span> <span class="fl">19</span>, size <span class="op">=</span> <span class="fl">2</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>caption <span class="op">=</span> <span class="st">"RGF93 / Lambert-93 Projection"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">custom_theme</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html" class="external-link">geom_sf_label</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">adour_sites</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>label <span class="op">=</span> <span class="va">site</span><span class="op">)</span>, nudge_x <span class="op">=</span> <span class="fl">5000</span><span class="op">)</span></span></code></pre></div>
+<div class="figure">
+<img src="snakedist_files/figure-html/map-adour-sites-1.png" alt="Figure 2. Study area with survey sampling" width="80%"><p class="caption">
+Figure 2. Study area with survey sampling
+</p>
+</div>
+</div>
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
 
-      </div>
+        <nav id="toc" data-toggle="toc"><h2 data-toc-skip>Contents</h2>
+    </nav>
+</div>
 
 </div>
 
