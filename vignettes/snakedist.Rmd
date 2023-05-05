@@ -88,6 +88,7 @@ adour_sites
 Let's map the data.
 
 ```{r 'map-adour-sites', fig.height=9, fig.width=12, out.width='80%', echo=TRUE, fig.cap='Figure 1. Study area with survey sampling'}
+# Visualize data ----
 ggplot() +
   geom_sf(data = adour_river, col = "steelblue") +
   geom_sf(data = adour_sites, shape = 19, size = 2) +
@@ -107,6 +108,7 @@ It uses the function `sf::st_line_sample()` to regularly (or randomly, argument 
 
 
 ```{r 'compute-distances', echo=TRUE}
+# Compute distance along the river ----
 dists <- distance_along(adour_sites, adour_river, density = 0.01, type = "regular", mc.cores = 1)
 head(dists, 12)
 ```
@@ -114,7 +116,18 @@ head(dists, 12)
 This `data.frame` can be converted to a square matrix with the function `df_to_matrix()`.
 
 ```{r 'convert-distances', echo=TRUE}
+# Convert to square matrix ----
 df_to_matrix(dists)
+```
+
+\
+
+We can compare these values with the Euclidean distance.
+
+```{r 'compare-distances', echo=TRUE}
+# Compare to Euclidean distance ----
+coords <- sf::st_coordinates(adour_sites)
+dist(coords, upper = TRUE, diag = TRUE)
 ```
 
 \
