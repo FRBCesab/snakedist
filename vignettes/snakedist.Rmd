@@ -45,7 +45,7 @@ custom_theme <- function() {
 `snakedist` provides two datasets:
 
 - `adour_lambert93`: a spatial line layer (`geopackage`) of the French river _L'Adour_.
-- `adour_sites_coords`: a table (`csv`) containing spatial coordinates of 10 locations sampled along the Adour.
+- `adour_sites_coords`: a table (`csv`) containing spatial coordinates of 5 locations sampled along the Adour.
 
 \
 
