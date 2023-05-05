@@ -195,7 +195,7 @@ distance_along <- function(sites, along, density = 0.01, type = "regular",
   ## Export final table ----
   
   along_segments <- along_segments |> 
-    dplyr::mutate(weight = distance_along) |> 
+    dplyr::mutate(distance = distance_along) |> 
     dplyr::select(1, 2, 4) |> 
     sf::st_drop_geometry() |> 
     as.data.frame()
