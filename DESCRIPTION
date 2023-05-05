@@ -21,9 +21,12 @@ Suggests:
     ggplot2,
     knitr,
     rmarkdown,
-    rnaturalearth
+    rnaturalearth,
+    rnaturalearthhires
 Imports: 
     dplyr,
     parallel,
     rlang,
     sf
+Remotes:
+    ropensci/rnaturalearthhires
