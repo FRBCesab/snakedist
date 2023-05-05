@@ -6,7 +6,7 @@
 # install.packages(c("png", "ggplot2", "hexSticker", "grid", "ggpubr"))
 
 
-rlogo <- png::readPNG(here::here("inst", "package-sticker", "r_logo.png"))
+rlogo <- png::readPNG(here::here("inst", "package-sticker", "snake_logo.png"))
 rlogo <- grid::rasterGrob(rlogo, interpolate = TRUE)
 
 p <- ggplot2::ggplot() +
@@ -18,7 +18,7 @@ p <- ggplot2::ggplot() +
 hexSticker::sticker(
 
   subplot   = p,
-  package   = "R Package",
+  package   = "snakedist",
   filename  = here::here("man", "figures", "package-sticker.png"),
   dpi       = 600,
 
@@ -26,10 +26,10 @@ hexSticker::sticker(
   u_size    =  5.0,         # URL
   p_family  = "Aller_Rg",
 
-  p_color   = "#32436F",   # Title
+  p_color   = "#413020",   # Title
   h_fill    = "#FFFFFF",   # Background
-  h_color   = "#1064B2",   # Border
-  u_color   = "#32436F",   # URL
+  h_color   = "#296920",   # Border
+  u_color   = "#413020",   # URL
 
   p_x       = 1.00,        # Title
   p_y       = 0.60,        # Title
@@ -39,7 +39,7 @@ hexSticker::sticker(
   s_width   = 1.25,        # Subplot
   s_height  = 1.25,        # Subplot
 
-  url       = "https://github.com/",
+  url       = "https://github.com/frbcesab/snakedist",
 
   spotlight = TRUE,
   l_alpha   = 0.10,
