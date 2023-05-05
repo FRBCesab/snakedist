@@ -36,8 +36,8 @@ hexSticker::sticker(
   s_x       = 1.00,        # Subplot
   s_y       = 1.25,        # Subplot
 
-  s_width   = 1.25,        # Subplot
-  s_height  = 1.25,        # Subplot
+  s_width   = 1.00,        # Subplot
+  s_height  = 1.00,        # Subplot
 
   url       = "https://github.com/frbcesab/snakedist",
 
