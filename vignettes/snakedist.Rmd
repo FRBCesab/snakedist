@@ -62,7 +62,7 @@ adour_sites
 
 The function `distance_along()` requires that both layers are spatial objects. So we need to convert the `data.frame` "adour_sites" into an `sf` object.
 
-```{r 'import-adour-sites', echo=TRUE}
+```{r 'convert-adour-sites', echo=TRUE}
 # Convert data.frame to sf object ----
 adour_sites <- sf::st_as_sf(adour_sites, coords = c("longitude", "latitude"), 
                             crs = "epsg:2154")
@@ -108,5 +108,22 @@ ggplot() +
             family = "serif")
 ```
 
+
+
+```{r 'map-adour-sites', fig.height=9, fig.width=12, out.width='80%', echo=TRUE, fig.cap='Figure 2. Study area with survey sampling'}
+ggplot() +
+  geom_sf(data = adour_river, col = "steelblue") +
+  geom_sf(data = adour_sites, shape = 19, size = 2) +
+  labs(caption = "RGF93 / Lambert-93 Projection") +
+  custom_theme() +
+  geom_text(aes(x = 334500, y = 6285000), label = "River", hjust = 0,
+            color = "steelblue", fontface = "bold", size = 6, family = "serif") +
+  geom_text(aes(x = 414950, y = 6312200), label = "Location 3", hjust = -0.20,
+            color = "black", fontface = "bold", size = 6, family = "serif") +
+  geom_text(aes(x = 474655, y = 6236708), label = "Location 1", 
+            color = "black", fontface = "bold", size = 6, family = "serif") +
+  geom_text(aes(x = 467250, y = 6287620), label = "Location 2", 
+            color = "black", fontface = "bold", size = 6, family = "serif")
+```
 
 
