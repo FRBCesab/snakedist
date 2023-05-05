@@ -198,3 +198,84 @@ points_to_line <- function(points_sf, from, to) {
     sf::st_cast("LINESTRING") |> 
     dplyr::ungroup()
 }
+
+
+
+#' Check for boolean values
+#' 
+#' @param boolean a `logical` value of length 1.
+#' 
+#' @noRd
+
+check_logical_value <- function(boolean) {
+  
+  if (is.null(boolean)) {
+    stop("The argument '", deparse(substitute(boolean)), "' cannot be NULL", 
+         call. = FALSE)
+  }
+  
+  if (!is.logical(boolean) || length(boolean) != 1) {
+    stop("The argument '", deparse(substitute(boolean)), "' must be a ", 
+         "logical (TRUE or FALSE) of length 1", call. = FALSE)
+  }
+  
+  if (is.na(boolean)) {
+    stop("The argument '", deparse(substitute(boolean)), "' cannot be NA", 
+         call. = FALSE)
+  }
+  
+  invisible(NULL)
+}
+
+
+
+#' Check for the data.frame distance
+#'
+#' @param data a `data.frame` with the column `from`, `to` and `distance`. 
+#'   The output of the function [distance_along()].
+#'
+#' @noRd
+
+check_dist_data <- function(data) {
+  
+  if (missing(data)) {
+    stop("Argument 'data' is required ", 
+         "(output of the function distance_along())", call. = FALSE)
+  }
+  
+  if (!is.data.frame(data)) {
+    stop("Argument 'data' must be a data.frame ", 
+         "(output of the function distance_along())", call. = FALSE)
+  }
+  
+  if (!("from" %in% colnames(data))) {
+    stop("The column 'from' is absent from the 'data' data.frame ", 
+         "(output of the function distance_along())", call. = FALSE)
+  }
+  
+  if (!("to" %in% colnames(data))) {
+    stop("The column 'to' is absent from the 'data' data.frame ", 
+         "(output of the function distance_along())", call. = FALSE)
+  }
+  
+  if (!("distance" %in% colnames(data))) {
+    stop("The column 'distance' is absent from the 'data' data.frame ", 
+         "(output of the function distance_along())", call. = FALSE)
+  }
+  
+  if (nrow(data) == 0) {
+    stop("Argument 'data' must have at least one row", call. = FALSE)
+  }
+  
+  if (!is.character(data$"from")) {
+    stop("The column 'from' of the 'data' data.frame must be a character", 
+         call. = FALSE)
+  }
+  
+  if (!is.character(data$"to")) {
+    stop("The column 'to' of the 'data' data.frame must be a character", 
+         call. = FALSE)
+  }
+  
+  invisible(NULL)  
+}

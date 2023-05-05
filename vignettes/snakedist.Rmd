@@ -22,15 +22,12 @@ The purpose of the package `snakedist` is to compute the distance between each p
 
 # Setup
 
-## Dependencies
-
 ```{r setup}
+# Required packages ----
 library(snakedist)
 library(ggplot2)
 ```
 
-
-## ggplot2 theme
 
 ```{r 'ggplot-theme', echo=TRUE}
 # Custom ggplot2 theme ----
@@ -110,7 +107,16 @@ It uses the function `sf::st_line_sample()` to regularly (or randomly, argument 
 
 
 ```{r 'compute-distances', echo=TRUE}
-dists <- distance_along(adour_sites, adour_river, density = 0.01, type = "regular", mc.cores = 2)
-dists
+dists <- distance_along(adour_sites, adour_river, density = 0.01, type = "regular", mc.cores = 1)
+head(dists, 12)
 ```
 
+This `data.frame` can be converted to a square matrix with the function `df_to_matrix()`.
+
+```{r 'convert-distances', echo=TRUE}
+df_to_matrix(dists)
+```
+
+\
+
+This package is related to the package [`chessboard`](https://frbcesab.github.io/chessboard/).

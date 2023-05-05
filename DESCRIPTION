@@ -25,4 +25,5 @@ Imports:
     dplyr,
     parallel,
     rlang,
-    sf
+    sf,
+    tidyr
