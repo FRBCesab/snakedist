@@ -20,13 +20,9 @@ VignetteBuilder: knitr
 Suggests: 
     ggplot2,
     knitr,
-    rmarkdown,
-    rnaturalearth,
-    rnaturalearthhires
+    rmarkdown
 Imports: 
     dplyr,
     parallel,
     rlang,
     sf
-Remotes:
-    ropensci/rnaturalearthhires

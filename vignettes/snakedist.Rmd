@@ -7,11 +7,22 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-```{r, include = FALSE}
-knitr::opts_chunk$set(collapse = TRUE,
-                      comment  = "#>")
+```{r include=FALSE}
+knitr::opts_chunk$set(collapse  = TRUE,
+                      comment   = "#>",
+                      out.width = "100%",
+                      dpi       = 96,
+                      fig.align = "center")
 ```
 
+
+The purpose of the package `snakedist` is to compute the distance between each pair of locations by following the shape of a curved line (e.g. a river).
+
+
+
+# Setup
+
+## Dependencies
 
 ```{r setup}
 library(snakedist)
@@ -19,7 +30,9 @@ library(ggplot2)
 ```
 
 
-```{r 'ggplot-theme', echo=FALSE}
+## ggplot2 theme
+
+```{r 'ggplot-theme', echo=TRUE}
 # Custom ggplot2 theme ----
 custom_theme <- function() {
   theme_light() + 
@@ -30,14 +43,14 @@ custom_theme <- function() {
 }
 ```
 
-## Datasets
+# Datasets
 
 `snakedist` provides two datasets:
 
-- `adour_lambert93.gpkg`: a spatial layer (`LINESTRING`) of the French river _L'Adour_.
-- `adour_sites_coords.csv`: a `data.frame` containing spatial coordinates of 10 locations sampled along the Adour.
+- `adour_lambert93`: a spatial line layer (`geopackage`) of the French river _L'Adour_.
+- `adour_sites_coords`: a table (`csv`) containing spatial coordinates of 10 locations sampled along the Adour.
 
-The purpose of the package `snakedist` is to compute the distance between each pair of locations by following the shape of the river.
+\
 
 First, let's import the two datasets:
 
@@ -50,6 +63,7 @@ adour_river  <- sf::st_read(path_to_file, quiet = TRUE)
 adour_river
 ```
 
+\
 
 ```{r 'import-adour-sites', echo=TRUE}
 # Import sites data ----
@@ -59,8 +73,11 @@ adour_sites  <- read.csv(path_to_file)
 adour_sites
 ```
 
+\
 
-The function `distance_along()` requires that both layers are spatial objects. So we need to convert the `data.frame` "adour_sites" into an `sf` object.
+The function `distance_along()` (main function of the package) requires that 
+both layers are spatial objects. So we need to convert the `data.frame` 
+**adour_sites** into an `sf` object.
 
 ```{r 'convert-adour-sites', echo=TRUE}
 # Convert data.frame to sf object ----
@@ -69,54 +86,31 @@ adour_sites <- sf::st_as_sf(adour_sites, coords = c("longitude", "latitude"),
 adour_sites
 ```
 
-
-Now, we will import a base map of France to visualize our data.
-
-```{r 'get-basemap', echo=TRUE}
-# Import France departments ----
-france <- rnaturalearth::ne_states("france", returnclass = "sf")
-
-# Remove overseas territories ----
-france <- france[grep("^FR\\.", france$"code_hasc"), ]
-
-# Project layer to RGF93 / Lambert-93 system ----
-france <- sf::st_transform(france, sf::st_crs(adour_river))
-```
-
+\
 
 Let's map the data.
 
-```{r 'map-adour-river', echo=TRUE, fig.height=9, fig.width=10, out.width='80%', fig.cap='Figure 1. Location of the French river L\'Adour'}
-# Get extent of Adour river ----
-adour_extent <- sf::st_bbox(adour_river)
-
-# Add some margin around ----
-adour_extent <- adour_extent + c(-10000, -10000, 10000, 10000)
-
-# Map ----
-ggplot() +
-  geom_sf(data = france, fill = "lightgray", col = "white", size = 0.2) +
-  geom_sf(data = adour_river, col = "steelblue") +
-  geom_sf(data = sf::st_as_sfc(adour_extent), fill = NA, size = 0.3) +
-  labs(caption = "RGF93 / Lambert-93 Projection") +
-  custom_theme() +
-  geom_text(aes(x = 194015, y = 6453703), label = "Atlantic\nOcean",
-            color = "lightgray", fontface = "italic", size = 6, 
-            family = "serif") +
-  geom_text(aes(x = 482630, y = 6150836), label = "Pyrenees",
-            color = "lightgray", fontface = "italic", size = 6, 
-            family = "serif")
-```
-
-
-
-```{r 'map-adour-sites', fig.height=9, fig.width=12, out.width='80%', echo=TRUE, fig.cap='Figure 2. Study area with survey sampling'}
+```{r 'map-adour-sites', fig.height=9, fig.width=12, out.width='80%', echo=TRUE, fig.cap='Figure 1. Study area with survey sampling'}
 ggplot() +
   geom_sf(data = adour_river, col = "steelblue") +
   geom_sf(data = adour_sites, shape = 19, size = 2) +
+  geom_sf_label(data = adour_sites, aes(label = site), nudge_x = 5000) +
+  geom_text(aes(x = 334500, y = 6285000), label = "L'Adour", hjust = 0,
+            color = "steelblue", fontface = "bold", size = 6, family = "serif") +
   labs(caption = "RGF93 / Lambert-93 Projection") +
-  custom_theme() +
-  geom_sf_label(data = adour_sites, aes(label = site), nudge_x = 5000)
+  custom_theme()
 ```
 
+
+# Compute distances
+
+
+The function `distance_along()` computes the distance between pairs of sites by following the shape of a linear structure (in our case the river Adour).
+It uses the function `sf::st_line_sample()` to regularly (or randomly, argument `type`) sample points on the line with a given density of points (argument `density`). All sampled points between the two sites will be selected and their cumulative euclidean distance will be computed.
+
+
+```{r 'compute-distances', echo=TRUE}
+dists <- distance_along(adour_sites, adour_river, density = 0.01, type = "regular", mc.cores = 2)
+dists
+```
 
