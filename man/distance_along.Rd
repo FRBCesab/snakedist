@@ -2,7 +2,7 @@
 % Please edit documentation in R/distance_along.R
 \name{distance_along}
 \alias{distance_along}
-\title{Compute the distance between two nodes along a linear shape}
+\title{Compute the distance between two locations along a linear shape}
 \usage{
 distance_along(
   sites,
@@ -14,13 +14,13 @@ distance_along(
 )
 }
 \arguments{
-\item{sites}{an \code{sf} object of type \code{POINT}. A spatial object
-containing coordinates of sites. Note that the first column must be the
-site label.}
+\item{sites}{an \code{sf} object of type \code{POINT}. A spatial object containing
+coordinates of sites. Note that the first column must be the
+site identifier.}
 
 \item{along}{an \code{sf} object of type \code{LINESTRING}. A spatial object
 containing coordinates of the linear shape (e.g. a river, a road, etc.)
-to follow while computing distances between two nodes (sites).}
+to follow while computing distances between the two sites.}
 
 \item{density}{a \code{numeric} of length 1. The density of points to sample on
 the linear structure. See \code{\link[sf:st_line_sample]{sf::st_line_sample()}} for further detail.
@@ -38,15 +38,15 @@ with \code{\link[parallel:detectCores]{parallel::detectCores()}}).}
 \value{
 A three-column \code{data.frame} with:
 \itemize{
-\item \code{from}, the first node
-\item \code{to}, the second node
-\item \code{weight}, the distance between the two nodes along the linear shape
+\item \code{from}, the first site
+\item \code{to}, the second site
+\item \code{weight}, the distance between the two sites along the linear shape
 }
 }
 \description{
-Computes distance between two nodes (sites) along a linear shape
-(e.g. a river, a road, etc.). This function uses parallel computing to speed
-up the distance computation.
+Computes distance between two sites along a linear shape (e.g. a river, a
+road, etc.). This function uses parallel computing to speed up the distance
+computation.
 }
 \examples{
 ## Add an example ----

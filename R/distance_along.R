@@ -1,17 +1,17 @@
-#' Compute the distance between two nodes along a linear shape
+#' Compute the distance between two locations along a linear shape
 #' 
 #' @description
-#' Computes distance between two nodes (sites) along a linear shape 
-#' (e.g. a river, a road, etc.). This function uses parallel computing to speed
-#' up the distance computation.
+#' Computes distance between two sites along a linear shape (e.g. a river, a 
+#' road, etc.). This function uses parallel computing to speed up the distance
+#' computation.
 #' 
-#' @param sites an `sf` object of type `POINT`. A spatial object
-#'   containing coordinates of sites. Note that the first column must be the 
-#'   site label.
+#' @param sites an `sf` object of type `POINT`. A spatial object containing 
+#'   coordinates of sites. Note that the first column must be the 
+#'   site identifier.
 #' 
 #' @param along an `sf` object of type `LINESTRING`. A spatial object 
 #'   containing coordinates of the linear shape (e.g. a river, a road, etc.)
-#'   to follow while computing distances between two nodes (sites).
+#'   to follow while computing distances between the two sites.
 #' 
 #' @param density a `numeric` of length 1. The density of points to sample on 
 #'   the linear structure. See [sf::st_line_sample()] for further detail. 
@@ -27,9 +27,9 @@
 #' @param ... other argument to pass to  [sf::st_line_sample()].
 #' 
 #' @return A three-column `data.frame` with:
-#'   - `from`, the first node
-#'   - `to`, the second node
-#'   - `weight`, the distance between the two nodes along the linear shape
+#'   - `from`, the first site
+#'   - `to`, the second site
+#'   - `weight`, the distance between the two sites along the linear shape
 #' 
 #' @export
 #' @import rlang
