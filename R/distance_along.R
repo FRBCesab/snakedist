@@ -143,10 +143,14 @@ distance_along <- function(sites, along, density = 0.01, type = "regular",
   
   ## Convert LINESTRING to POINTS ----
   
+  message("- Sampling points on the LINESTRING...")
+  
   sampled_points <- line_to_points(along, density, type, ...)
   
   
   ## Find nearest points on line to each site ----
+  
+  message("- Finding nearest points on LINESTRING for each point...")
   
   nearest_points <- unlist(parallel::mclapply(1:nrow(sites), function(i) {
     which.min(sf::st_distance(sites[i, ], sampled_points))
@@ -155,18 +159,30 @@ distance_along <- function(sites, along, density = 0.01, type = "regular",
   
   ## Create correspondence table ----
   
+  message("- Creating point by point matrix...")
+  
   nearest_points <- data.frame("id"   = nearest_points, 
                                "site" = sites[ , 1, drop = TRUE])
   
   
   ## Get all combinations with two sites ----
   
-  pairs_of_sites <- expand.grid(nearest_points$"site", nearest_points$"site", 
+  pairs_of_sites <- expand.grid("from" = nearest_points$"site", 
+                                "to"   = nearest_points$"site", 
                                 stringsAsFactors = FALSE)
-  colnames(pairs_of_sites) <- c("from", "to")
+
+  
+  # Select the upper triangle ----
+  
+  pairs_of_sites$"distance" <- 1
+  
+  pairs_of_sites <- df_to_matrix(pairs_of_sites, lower = FALSE, diag = FALSE)
+  pairs_of_sites <- matrix_to_df(pairs_of_sites)[ , 1:2]
   
   
   ## Create spatial segment between all sites pairs ----
+  
+  message("- Creating segment between pairs of points...")
   
   along_segments <- do.call(rbind.data.frame, 
                             parallel::mclapply(1:nrow(pairs_of_sites), 
@@ -189,16 +205,39 @@ distance_along <- function(sites, along, density = 0.01, type = "regular",
   
   ## Compute distance between all sites pairs ----
   
+  message("- Computing distance (segment length)...")
+  
   distance_along <- sf::st_length(along_segments) |> as.numeric()
   
   
   ## Export final table ----
+  
+  message("- Cleaning output...")
   
   along_segments <- along_segments |> 
     dplyr::mutate(distance = distance_along) |> 
     dplyr::select(1, 2, 4) |> 
     sf::st_drop_geometry() |> 
     as.data.frame()
+  
+  # Add lower triangle ----
+  
+  to_add <- along_segments
+  colnames(to_add)[1:2] <- c("to", "from")
+  to_add <- to_add[ , c("from", "to", "distance")]
+  
+  along_segments <- rbind(along_segments, to_add)
+  
+  
+  # Add diagonal ----
+  
+  sites <- unique(along_segments$"from")
+  to_add <- data.frame("from" = sites, "to" = sites, "distance" = 0)
+  
+  along_segments <- rbind(along_segments, to_add)
+  
+  
+  # Order table ----
   
   along_segments <- along_segments[with(along_segments, order(from, to)), ]
   rownames(along_segments) <- NULL
