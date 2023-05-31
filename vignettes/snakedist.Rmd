@@ -107,9 +107,16 @@ The function `distance_along()` computes the distance between pairs of sites by 
 It uses the function `sf::st_line_sample()` to regularly (or randomly, argument `type`) sample points on the line with a given density of points (argument `density`). All sampled points between the two sites will be selected and their cumulative euclidean distance will be computed.
 
 
-```{r 'compute-distances', echo=TRUE}
+```{r 'compute-distances-2', echo=TRUE, eval=FALSE}
 # Compute distance along the river ----
-dists <- distance_along(adour_sites, adour_river, density = 0.01, type = "regular", mc.cores = 1)
+dists <- distance_along(adour_sites, adour_river, density = 0.01, type = "regular")
+head(dists, 12)
+```
+
+
+```{r 'compute-distances', echo=FALSE}
+# Compute distance along the river ----
+dists <- suppressMessages(distance_along(adour_sites, adour_river, density = 0.01, type = "regular", mc.cores = 1))
 head(dists, 12)
 ```
 
