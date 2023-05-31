@@ -189,15 +189,9 @@ two sites will be selected and their cumulative euclidean distance will
 be computed.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Compute distance along the river ----</span></span>
-<span><span class="va">dists</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/distance_along.html">distance_along</a></span><span class="op">(</span><span class="va">adour_sites</span>, <span class="va">adour_river</span>, density <span class="op">=</span> <span class="fl">0.01</span>, type <span class="op">=</span> <span class="st">"regular"</span>, mc.cores <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
-<span><span class="co">#&gt; - Sampling points on the LINESTRING...</span></span>
-<span><span class="co">#&gt; - Finding nearest points on LINESTRING for each point...</span></span>
-<span><span class="co">#&gt; - Creating point by point matrix...</span></span>
-<span><span class="co">#&gt; - Creating segment between pairs of points...</span></span>
-<span><span class="co">#&gt; - Computing distance (segment length)...</span></span>
-<span><span class="co">#&gt; - Cleaning output...</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">dists</span>, <span class="fl">12</span><span class="op">)</span></span>
-<span><span class="co">#&gt;    from   to  distance</span></span>
+<span><span class="va">dists</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/distance_along.html">distance_along</a></span><span class="op">(</span><span class="va">adour_sites</span>, <span class="va">adour_river</span>, density <span class="op">=</span> <span class="fl">0.01</span>, type <span class="op">=</span> <span class="st">"regular"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">dists</span>, <span class="fl">12</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">#&gt;    from   to  distance</span></span>
 <span><span class="co">#&gt; 1  S-01 S-01      0.00</span></span>
 <span><span class="co">#&gt; 2  S-01 S-02  27422.59</span></span>
 <span><span class="co">#&gt; 3  S-01 S-03  52913.17</span></span>
@@ -209,10 +203,10 @@ be computed.</p>
 <span><span class="co">#&gt; 9  S-02 S-04  75642.30</span></span>
 <span><span class="co">#&gt; 10 S-02 S-05 117459.27</span></span>
 <span><span class="co">#&gt; 11 S-03 S-01  52913.17</span></span>
-<span><span class="co">#&gt; 12 S-03 S-02  25490.58</span></span></code></pre></div>
+<span><span class="co">#&gt; 12 S-03 S-02  25490.58</span></span></code></pre>
 <p>This <code>data.frame</code> can be converted to a square matrix with
 the function <code><a href="../reference/df_to_matrix.html">df_to_matrix()</a></code>.</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Convert to square matrix ----</span></span>
 <span><span class="fu"><a href="../reference/df_to_matrix.html">df_to_matrix</a></span><span class="op">(</span><span class="va">dists</span><span class="op">)</span></span>
 <span><span class="co">#&gt;           S-01      S-02     S-03      S-04      S-05</span></span>
@@ -223,7 +217,7 @@ the function <code><a href="../reference/df_to_matrix.html">df_to_matrix()</a></
 <span><span class="co">#&gt; S-05 144881.86 117459.27 91968.69  41816.97      0.00</span></span></code></pre></div>
 <p><br></p>
 <p>We can compare these values with the Euclidean distance.</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Compare to Euclidean distance ----</span></span>
 <span><span class="va">coords</span> <span class="op">&lt;-</span> <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_coordinates.html" class="external-link">st_coordinates</a></span><span class="op">(</span><span class="va">adour_sites</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/stats/dist.html" class="external-link">dist</a></span><span class="op">(</span><span class="va">coords</span>, upper <span class="op">=</span> <span class="cn">TRUE</span>, diag <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
