@@ -190,6 +190,12 @@ be computed.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Compute distance along the river ----</span></span>
 <span><span class="va">dists</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/distance_along.html">distance_along</a></span><span class="op">(</span><span class="va">adour_sites</span>, <span class="va">adour_river</span>, density <span class="op">=</span> <span class="fl">0.01</span>, type <span class="op">=</span> <span class="st">"regular"</span>, mc.cores <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
+<span><span class="co">#&gt; - Sampling points on the LINESTRING...</span></span>
+<span><span class="co">#&gt; - Finding nearest points on LINESTRING for each point...</span></span>
+<span><span class="co">#&gt; - Creating point by point matrix...</span></span>
+<span><span class="co">#&gt; - Creating segment between pairs of points...</span></span>
+<span><span class="co">#&gt; - Computing distance (segment length)...</span></span>
+<span><span class="co">#&gt; - Cleaning output...</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">dists</span>, <span class="fl">12</span><span class="op">)</span></span>
 <span><span class="co">#&gt;    from   to  distance</span></span>
 <span><span class="co">#&gt; 1  S-01 S-01      0.00</span></span>
