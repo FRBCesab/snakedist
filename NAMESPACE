@@ -2,4 +2,5 @@
 
 export(df_to_matrix)
 export(distance_along)
+export(matrix_to_df)
 import(rlang)

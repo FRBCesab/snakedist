@@ -4,8 +4,8 @@
 #' Converts a `data.frame` to a distance `matrix`.
 #' 
 #' @param data a `data.frame` with the following three columns: `from` (the 
-#'   first site), `to` (the second site). The output of the function 
-#'   [distance_along()].
+#'   first site), `to` (the second site) and `distance` (the value of the link
+#'   between two sites). The output of the function [distance_along()].
 #' 
 #' @param lower a `logical` value. If `TRUE` (default), keep values in the 
 #'   lower triangle of the matrix. Otherwise they will be replaced by `NA` 

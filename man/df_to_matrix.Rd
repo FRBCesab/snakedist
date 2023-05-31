@@ -8,8 +8,8 @@ df_to_matrix(data, lower = TRUE, upper = TRUE, diag = TRUE, na_to_zero = TRUE)
 }
 \arguments{
 \item{data}{a \code{data.frame} with the following three columns: \code{from} (the
-first site), \code{to} (the second site). The output of the function
-\code{\link[=distance_along]{distance_along()}}.}
+first site), \code{to} (the second site) and \code{distance} (the value of the link
+between two sites). The output of the function \code{\link[=distance_along]{distance_along()}}.}
 
 \item{lower}{a \code{logical} value. If \code{TRUE} (default), keep values in the
 lower triangle of the matrix. Otherwise they will be replaced by \code{NA}

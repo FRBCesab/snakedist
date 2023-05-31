@@ -4,9 +4,9 @@
 \name{snakedist-package}
 \alias{snakedist}
 \alias{snakedist-package}
-\title{snakedist: The Title of the Project}
+\title{snakedist: Compute Distances along a Linear Shape}
 \description{
-A paragraph providing a full description of the project (on several lines...)
+Computes distance between pair of points along a linear shape (e.g. a river, a road, etc.). This function uses parallel computing to speed up the distance computation.
 }
 \seealso{
 Useful links:
